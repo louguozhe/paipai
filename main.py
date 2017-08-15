@@ -15,7 +15,7 @@ plt.rcParams['axes.unicode_minus'] = False
 
 price = pd.read_excel('data\jiage.xlsx', 'Sheet1', parse_dates=[0], index_col=0, na_values=['NA'])
 statics = pd.read_excel('data\jiage.xlsx', 'Sheet2',index_col=0, na_values=['NA'])
-print(statics)
+#print(statics)
 #jiage_rencent = pd.Series([1,3,5,np.nan,6,8])
 #jiage_rencent = pd.Series([22,23])
 #print(jiage_rencent)
@@ -35,6 +35,15 @@ def plotFigure(title,filename,df=price,drawdiff=False,xLocator=2,yLocator=100):
         #plt.plot(diffprices[0],diffprices[1])
     df.plot(grid=True)
     plt.gca().xaxis.set_major_locator(MultipleLocator(xLocator))
+    plt.gca().yaxis.set_major_locator(MultipleLocator(yLocator))
+    plt.title(title)
+    plt.savefig(filename)
+    plt.clf()
+
+def plotFigure2(title,filename,df=price,st=statics,yLocator=100):
+    plt.rcParams['figure.figsize'] = (10, 8)  # 设置绘图尺寸
+    df.plot(grid=True)
+    st.plot(grid=True)
     plt.gca().yaxis.set_major_locator(MultipleLocator(yLocator))
     plt.title(title)
     plt.savefig(filename)
@@ -64,9 +73,14 @@ def plotLastSecondPrice(x,y):
     plt.savefig(filename)
     plt.clf()
 if __name__ == '__main__':
+
+    rownames= ['11:29:42','11:29:45']
+    plotFigure2(df=price.T['11:29:45'][-7:],st=statics.T['estimate'][-7:], title=u'2017年以来45S价格变化趋势和估计',\
+               filename='figure/201701_45S.png')
+
     columnnames = ['2016.01','2016.02','2016.03',	'2016.04',	'2016.05',	'2016.06'\
           ,'2016.07',	'2016.08',	'2016.09',	'2016.10',	'2016.11',	'2016.12'\
-          ,'2017.01',	'2017.02',	'2017.03',	'2017.04',	'2017.05',	'2017.06']
+          ,'2017.01',	'2017.02',	'2017.03',	'2017.04',	'2017.05',	'2017.06',	'2017.07']
     plotFigure(df=price[columnnames],title=u'2016年以来价格变化趋势'\
                ,filename='figure/201601_ALL.png')
     columnnames = ['2016.01','2016.06','2016.10',	'2017.06']
@@ -74,17 +88,17 @@ if __name__ == '__main__':
                ,filename='figure/201601_Except.png',drawdiff=True)
     columnnames = ['2016.02','2016.03','2016.04',	'2016.05'\
           ,'2016.07',	'2016.08',	'2016.09',	'2016.11',	'2016.12'\
-          ,'2017.01',	'2017.02',	'2017.03',	'2017.04',	'2017.05']
+          ,'2017.01',	'2017.02',	'2017.03',	'2017.04',	'2017.05',	'2017.07']
     plotFigure(df=price[columnnames],title=u'2016年以来正常月份价格变化趋势',\
                filename='figure/201601_Normal.png',drawdiff=True)
-    columnnames = ['2016.02','2016.07','2016.11']
+    columnnames = ['2016.02','2016.07','2016.11',	'2017.07']
     plotFigure(df=price[columnnames],title=u'2016年以来异常月份下一月价格变化趋势'\
                ,filename='figure/201601_Except_Next.png',drawdiff=True)
 
-    columnnames = ['2017.01', '2017.02', '2017.03', '2017.04', '2017.05', '2017.06']
+    columnnames = ['2017.01', '2017.02', '2017.03', '2017.04', '2017.05', '2017.06','2017.07']
     plotFigure(df=price[columnnames], title=u'2017年以来所有月份价格变化趋势',\
                filename='figure/201701_All.png',drawdiff=True)
-    columnnames = ['2017.01', '2017.02', '2017.03', '2017.04', '2017.05']
+    columnnames = ['2017.01', '2017.02', '2017.03', '2017.04', '2017.05','2017.07']
     plotFigure(df=price[columnnames], title=u'2017年以来有效月份价格变化趋势',\
                filename='figure/201701_Normal.png',drawdiff=True)
     plotFigure(df=price[29:][columnnames], title=u'2017年以来有效月份30S后变化趋势',\
